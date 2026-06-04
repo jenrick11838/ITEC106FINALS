@@ -5,7 +5,7 @@
 @section('content')
 <div class="row g-3">
 
-    {{-- ✅ Fixed: Success flash message --}}
+    {{-- ✅ Success flash message --}}
     @if(session('success'))
     <div class="col-12">
         <div class="alert alert-success alert-dismissible fade show py-2" style="font-size:.85rem">
@@ -22,9 +22,10 @@
 
                 {{-- Avatar with camera button --}}
                 <div class="position-relative d-inline-block mb-3">
+                    {{-- ✅ Fixed: avatar is now a full Cloudinary URL --}}
                     <img id="avatarPreview"
                          src="{{ auth()->user()->avatar
-                                ? asset('storage/avatars/' . auth()->user()->avatar)
+                                ? auth()->user()->avatar
                                 : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=4f46e5&color=fff&size=128' }}"
                          style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #4f46e5"
                          alt="Profile Picture">
@@ -281,14 +282,12 @@
 
 @push('scripts')
 <script>
-// Preview avatar instantly then auto-submit upload form
 document.getElementById('avatarInput').addEventListener('change', function (e) {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = function (ev) {
         document.getElementById('avatarPreview').src = ev.target.result;
-        // Short delay so preview renders before page reloads
         setTimeout(() => document.getElementById('avatarForm').submit(), 400);
     };
     reader.readAsDataURL(file);
