@@ -5,6 +5,16 @@
 @section('content')
 <div class="row g-3">
 
+    {{-- ✅ Fixed: Success flash message --}}
+    @if(session('success'))
+    <div class="col-12">
+        <div class="alert alert-success alert-dismissible fade show py-2" style="font-size:.85rem">
+            <i class="bi bi-check-circle me-1"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </div>
+    @endif
+
     {{-- ═══════════ LEFT: Avatar + Info Card ═══════════ --}}
     <div class="col-lg-4">
         <div class="card text-center">
@@ -129,7 +139,6 @@
                 <i class="bi bi-pencil-square text-primary me-2"></i>Edit Profile Information
             </div>
             <div class="card-body">
-                {{-- FIX: method="POST" + @method('PUT') --}}
                 <form method="POST" action="{{ route('profile.update') }}">
                     @csrf
                     @method('PUT')
@@ -219,8 +228,6 @@
                 <i class="bi bi-shield-lock text-primary me-2"></i>Change Password
             </div>
             <div class="card-body">
-                {{-- FIX: separate form, method="POST" + @method('PUT') --}}
-                {{-- Carries hidden name+email so ProfileController doesn't blank them --}}
                 <form method="POST" action="{{ route('profile.update') }}">
                     @csrf
                     @method('PUT')

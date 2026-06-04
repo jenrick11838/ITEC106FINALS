@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
@@ -58,21 +59,23 @@ class ProfileController extends Controller
     public function updateAvatar(Request $request)
     {
         $request->validate([
-            'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
+            'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:5120'],
         ]);
 
         $user = Auth::user();
 
         // Delete old avatar
         if ($user->avatar) {
-            $oldPath = storage_path("app/public/avatars/{$user->avatar}");
-            if (file_exists($oldPath)) {
-                unlink($oldPath);
-            }
+            Storage::disk('public')->delete('avatars/' . $user->avatar);
         }
 
-        $filename = uniqid('avatar_') . '.' . $request->file('avatar')->getClientOriginalExtension();
-        $request->file('avatar')->storeAs('avatars', $filename, 'public');
+        $file     = $request->file('avatar');
+        $filename = uniqid('avatar_') . '.' . $file->extension();
+        $stored   = $file->storeAs('avatars', $filename, 'public');
+
+        if (!$stored) {
+            return back()->withErrors(['avatar' => 'Failed to save image. Please try again.']);
+        }
 
         $user->avatar = $filename;
         $user->save();
