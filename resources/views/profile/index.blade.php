@@ -5,7 +5,6 @@
 @section('content')
 <div class="row g-3">
 
-    {{-- ✅ Success flash message --}}
     @if(session('success'))
     <div class="col-12">
         <div class="alert alert-success alert-dismissible fade show py-2" style="font-size:.85rem">
@@ -15,18 +14,19 @@
     </div>
     @endif
 
-    {{-- ═══════════ LEFT: Avatar + Info Card ═══════════ --}}
     <div class="col-lg-4">
         <div class="card text-center">
             <div class="card-body py-4">
 
-                {{-- Avatar with camera button --}}
+                @php
+                    $avatarSrc = auth()->user()->avatar
+                        ? asset('storage/avatars/' . auth()->user()->avatar)
+                        : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=4f46e5&color=fff&size=128';
+                @endphp
+
                 <div class="position-relative d-inline-block mb-3">
-                    {{-- ✅ Fixed: avatar is now a full Cloudinary URL --}}
                     <img id="avatarPreview"
-                         src="{{ auth()->user()->avatar
-                                ? auth()->user()->avatar
-                                : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=4f46e5&color=fff&size=128' }}"
+                         src="{{ $avatarSrc }}"
                          style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #4f46e5"
                          alt="Profile Picture">
                     <label for="avatarInput"
@@ -80,7 +80,6 @@
             </div>
         </div>
 
-        {{-- Avatar upload form (hidden input, auto-submits on file select) --}}
         <form method="POST"
               action="{{ route('profile.avatar') }}"
               enctype="multipart/form-data"
@@ -93,7 +92,6 @@
                    accept="image/*">
         </form>
 
-        {{-- Recent Notes mini list --}}
         <div class="card mt-3">
             <div class="card-header" style="font-size:.85rem">
                 <i class="bi bi-clock-history text-primary me-2"></i>My Recent Notes
@@ -119,10 +117,8 @@
         </div>
     </div>
 
-    {{-- ═══════════ RIGHT: Edit Forms ═══════════ --}}
     <div class="col-lg-8">
 
-        {{-- Validation errors --}}
         @if($errors->any())
         <div class="alert alert-danger alert-dismissible fade show py-2 mb-3" style="font-size:.85rem">
             <ul class="mb-0 ps-3">
@@ -134,7 +130,6 @@
         </div>
         @endif
 
-        {{-- ── Edit Profile Info ── --}}
         <div class="card">
             <div class="card-header">
                 <i class="bi bi-pencil-square text-primary me-2"></i>Edit Profile Information
@@ -223,7 +218,6 @@
             </div>
         </div>
 
-        {{-- ── Change Password ── --}}
         <div class="card mt-3">
             <div class="card-header">
                 <i class="bi bi-shield-lock text-primary me-2"></i>Change Password
@@ -276,8 +270,8 @@
             </div>
         </div>
 
-    </div>{{-- /col-lg-8 --}}
-</div>{{-- /row --}}
+    </div>
+</div>
 @endsection
 
 @push('scripts')

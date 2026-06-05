@@ -229,6 +229,7 @@
 
     <div class="sidebar-footer">
         <div class="sidebar-user">
+            {{-- ✅ Fixed: uses local storage URL --}}
             @php
                 $avatar = auth()->user()->avatar
                     ? asset('storage/avatars/' . auth()->user()->avatar)
@@ -261,6 +262,7 @@
             <span class="text-muted d-none d-sm-block" style="font-size:.8rem">
                 <i class="bi bi-calendar3"></i> {{ now()->format('M d, Y') }}
             </span>
+            {{-- ✅ Fixed: uses same $avatar variable with local storage URL --}}
             <a href="{{ route('profile.index') }}" class="text-decoration-none">
                 <img src="{{ $avatar }}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid var(--primary)" alt="">
             </a>

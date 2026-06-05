@@ -31,7 +31,6 @@ class ProfileController extends Controller
             'bio'     => ['nullable', 'string', 'max:1000'],
         ]);
 
-        // Password change (optional)
         if ($request->filled('current_password')) {
             $request->validate([
                 'current_password' => ['required'],
@@ -69,13 +68,9 @@ class ProfileController extends Controller
             Storage::disk('public')->delete('avatars/' . $user->avatar);
         }
 
-        $file     = $request->file('avatar');
-        $filename = uniqid('avatar_') . '.' . $file->extension();
-        $stored   = $file->storeAs('avatars', $filename, 'public');
-
-        if (!$stored) {
-            return back()->withErrors(['avatar' => 'Failed to save image. Please try again.']);
-        }
+        // Store new avatar
+        $filename = uniqid('avatar_') . '.' . $request->file('avatar')->extension();
+        $request->file('avatar')->storeAs('avatars', $filename, 'public');
 
         $user->avatar = $filename;
         $user->save();
