@@ -48,7 +48,8 @@
                     <td class="text-muted" style="font-size:.8rem">{{ $loop->iteration }}</td>
                     <td>
                         <div class="d-flex align-items-center gap-2">
-                            <img src="{{ $user->avatar ? asset('storage/avatars/'.$user->avatar) : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=4f46e5&color=fff&size=64' }}"
+                            {{-- ✅ Fixed: uses base64 avatar_data --}}
+                            <img src="{{ $user->avatar_data ? $user->avatar_data : 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=4f46e5&color=fff&size=64' }}"
                                 class="avatar-sm" alt="">
                             <span class="fw-500" style="font-size:.875rem">{{ $user->name }}</span>
                         </div>
