@@ -19,8 +19,8 @@
             <div class="card-body py-4">
 
                 @php
-                    $avatarSrc = auth()->user()->avatar
-                        ? asset('storage/avatars/' . auth()->user()->avatar)
+                    $avatarSrc = auth()->user()->avatar_data
+                        ? auth()->user()->avatar_data
                         : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=4f46e5&color=fff&size=128';
                 @endphp
 

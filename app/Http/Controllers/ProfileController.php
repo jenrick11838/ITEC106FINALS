@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
@@ -63,16 +62,13 @@ class ProfileController extends Controller
 
         $user = Auth::user();
 
-        // Delete old avatar
-        if ($user->avatar) {
-            Storage::disk('public')->delete('avatars/' . $user->avatar);
-        }
+        // ✅ Convert image to base64 and store in database
+        $file     = $request->file('avatar');
+        $mime     = $file->getMimeType();
+        $base64   = base64_encode(file_get_contents($file->getRealPath()));
+        $dataUrl  = "data:{$mime};base64,{$base64}";
 
-        // Store new avatar
-        $filename = uniqid('avatar_') . '.' . $request->file('avatar')->extension();
-        $request->file('avatar')->storeAs('avatars', $filename, 'public');
-
-        $user->avatar = $filename;
+        $user->avatar_data = $dataUrl;
         $user->save();
 
         return back()->with('success', 'Profile picture updated.');

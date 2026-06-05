@@ -229,10 +229,10 @@
 
     <div class="sidebar-footer">
         <div class="sidebar-user">
-            {{-- ✅ Fixed: uses local storage URL --}}
+            {{-- ✅ Fixed: uses base64 avatar stored in database --}}
             @php
-                $avatar = auth()->user()->avatar
-                    ? asset('storage/avatars/' . auth()->user()->avatar)
+                $avatar = auth()->user()->avatar_data
+                    ? auth()->user()->avatar_data
                     : 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) . '&background=4f46e5&color=fff&size=80';
             @endphp
             <img src="{{ $avatar }}" alt="avatar">
@@ -262,7 +262,7 @@
             <span class="text-muted d-none d-sm-block" style="font-size:.8rem">
                 <i class="bi bi-calendar3"></i> {{ now()->format('M d, Y') }}
             </span>
-            {{-- ✅ Fixed: uses same $avatar variable with local storage URL --}}
+            {{-- ✅ Fixed: uses base64 avatar --}}
             <a href="{{ route('profile.index') }}" class="text-decoration-none">
                 <img src="{{ $avatar }}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid var(--primary)" alt="">
             </a>

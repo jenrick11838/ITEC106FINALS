@@ -19,7 +19,8 @@ class User extends Authenticatable
         'gender',
         'bio',
         'avatar',
-        'avatar_public_id', // ✅ added
+        'avatar_data',
+        'avatar_public_id',
     ];
 
     protected $hidden = [
@@ -35,9 +36,8 @@ class User extends Authenticatable
         ];
     }
 
-    // ── Relationships ──────────────────────────────────────────────────────
     public function notes()
     {
-        return $this->hasMany(\App\Models\MeetingNote::class); // ✅ fixed
+        return $this->hasMany(\App\Models\MeetingNote::class);
     }
 }
